@@ -10,6 +10,8 @@ const { clock } = shipment;
 interface Props {
   timeline: Timeline;
   time: number;
+  /** Real playback time for the footage (0 on the Play screen, so Play starts without a jump). */
+  backdropTime: number;
   playing: boolean;
   reducedMotion: boolean;
 }
@@ -22,7 +24,7 @@ interface Props {
  * (trigger → agent → current actions), the shipment record bottom-left, and a
  * resolution panel that covers the stage in the final scene.
  */
-export function Stage({ timeline, time, playing, reducedMotion }: Props) {
+export function Stage({ timeline, time, backdropTime, playing, reducedMotion }: Props) {
   const scene = sceneAt(timeline, time);
   const reached = (sceneId: string, beat: string) => time >= beatTime(timeline, sceneId, beat);
   /** True for a short window after a beat, used to highlight changed values. */
@@ -52,7 +54,13 @@ export function Stage({ timeline, time, playing, reducedMotion }: Props) {
 
   return (
     <div className={`stage scene-${scene.id}`}>
-      <Backdrop time={time} duration={timeline.duration} playing={playing} reducedMotion={reducedMotion} />
+      <Backdrop
+        time={backdropTime}
+        openingEnd={timeline.scenes[1]?.start ?? timeline.duration}
+        duration={timeline.duration}
+        playing={playing}
+        reducedMotion={reducedMotion}
+      />
       <div className={`backdrop-shade ${inOpening ? '' : 'is-deep'}`} aria-hidden="true" />
 
       <div className="stage-place" aria-hidden={!inOpening}>

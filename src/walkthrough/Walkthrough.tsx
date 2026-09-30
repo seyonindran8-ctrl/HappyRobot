@@ -143,7 +143,13 @@ export function Walkthrough() {
         </div>
 
         <div className={`player-stage ${started ? '' : 'is-poster'}`}>
-          <Stage timeline={timeline} time={stageTime} playing={playing} reducedMotion={reducedMotion} />
+          <Stage
+            timeline={timeline}
+            time={stageTime}
+            backdropTime={started ? time : 0}
+            playing={playing}
+            reducedMotion={reducedMotion}
+          />
 
           {!started && (
             <div className="poster">
