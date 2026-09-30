@@ -1,10 +1,21 @@
 # Optional media
 
-Drop the supplied files here, then set `enabled: true` for each in
-`src/config/gapOutreach.ts` (`media.openingVideo` / `media.narration`).
+## Narration (in use)
 
-- `gap-dc-opening.mp4` — opening clip (muted, kept in step with the playback clock). It plays behind scene 1 and holds its last frame as the backdrop for scenes 2–4, so ~12 s with a calm final frame works best.
-- `gap-narration.mp3` — full narration. When enabled, its playback time drives the whole walkthrough.
+The ElevenLabs narration lives at `src/media/gap-narration.mp3` and is
+imported by `src/config/gapOutreach.ts`, so every build bundles it (the
+shareable single-file build embeds it). When `media.narration.enabled` is
+true, its playback time drives the walkthrough; the Sound button mutes it
+without breaking sync.
 
-Disabled media is never requested. An enabled file that fails to load is
-requested once, then the page falls back to the illustration / internal clock.
+Scene starts, caption cues and beats in the config are seconds from the start
+of this audio file. To replace the narration, swap the file and re-time those
+values against it.
+
+## Opening footage (not yet supplied)
+
+Drop `gap-dc-opening.mp4` in this folder and set `media.openingVideo.enabled`
+to `true`. It plays muted behind scene 1, kept in step with the playback
+clock, and holds its last frame as the backdrop for scenes 2–4. Until then,
+the illustrated distribution centre is shown. A missing file is requested
+once, then the page falls back to the illustration.

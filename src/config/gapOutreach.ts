@@ -6,15 +6,17 @@
  * for another account, copy this file and change the values; the components
  * read from `outreach` and never hard-code account details.
  *
- * Timings: each scene has a `duration` (seconds). Scene start times are
- * derived by summing durations, so lengthening one scene shifts everything
- * after it. `beats` are offsets in seconds from the start of their scene and
- * control when each visual change happens. After the narration is generated,
- * adjust durations (and, if needed, beats and caption cues) to match it.
+ * Timings: every time in the walkthrough (scene starts, caption cues and
+ * beats) is in seconds from the start of the narration audio, so each value
+ * can be checked directly against the audio file. A scene runs from its
+ * `start` to the next scene's start (the last one to `walkthrough.duration`).
+ * `beats` are the moments when visual changes happen.
  */
 
+import narrationUrl from '../media/gap-narration.mp3';
+
 export interface CaptionCue {
-  /** Seconds from the start of the scene. */
+  /** Seconds from the start of the narration. */
   at: number;
   text: string;
 }
@@ -25,15 +27,17 @@ export interface SceneConfig {
   title: string;
   /** Short label for the workflow step rail. */
   stepLabel: string;
-  duration: number;
-  /** Full narration for the scene; also shown as captions. */
+  /** Seconds from the start of the narration. */
+  start: number;
+  /** Full narration for the scene, word for word. */
   narration: string;
   /**
-   * Optional hand-timed caption cues. When omitted, the narration is split
-   * into sentences and timed in proportion to word count.
+   * Caption cues: short chunks that together spell out `narration` exactly.
+   * When omitted, the narration is split into sentences and timed in
+   * proportion to word count.
    */
   cues?: CaptionCue[];
-  /** Named moments within the scene, in seconds from scene start. */
+  /** Named visual moments, in seconds from the start of the narration. */
   beats: Record<string, number>;
 }
 
@@ -97,7 +101,7 @@ export const outreach = {
       compact: 'Agents call carriers to confirm ETAs, update the transport management system and support warehouse coordination.',
     },
     closing: {
-      question: 'Where does carrier coordination still require the most manual follow-up?',
+      question: 'Where could taking that follow-up off your team’s hands make the biggest difference?',
       supporting:
         'A useful first conversation would explore what your systems already handle, what still needs a call and where a small pilot could help.',
     },
@@ -136,63 +140,146 @@ export const outreach = {
       enabled: false,
       src: 'media/gap-dc-opening.mp4',
     },
+    /**
+     * ElevenLabs narration (78.1 s). Imported so the build bundles it; when
+     * enabled, its playback time drives the walkthrough.
+     */
     narration: {
-      enabled: false,
-      src: 'media/gap-narration.mp3',
+      enabled: true,
+      src: narrationUrl,
     },
   },
 
   walkthrough: {
     /** Frame shown behind the Play button before playback starts (seconds). */
     posterTime: 4,
+    /**
+     * Total runtime. The narration is 78.1 s; the extra seconds hold the
+     * closing question on screen so it can be read.
+     */
+    duration: 82,
+    /**
+     * Cue and beat times were set by forced alignment of the script against
+     * the audio (pocketsphinx), each placed at or just before the spoken
+     * phrase noted alongside. They still want a listening check.
+     */
     scenes: [
       {
         id: 'delay',
         title: 'The missed appointment',
         stepLabel: 'Delay flagged',
-        duration: 12,
+        start: 0,
         narration:
-          'A truck carrying stock to a Gap distribution centre will miss its unloading appointment. Someone needs to confirm when it will arrive, agree a new slot and keep the receiving team informed.',
-        beats: { notification: 1.8 },
+          'A truck carrying stock to a Gap distribution centre is going to miss its unloading appointment. Someone needs to confirm when it will arrive, agree a new slot, and keep the receiving team informed.',
+        cues: [
+          { at: 0, text: 'A truck carrying stock to a Gap distribution centre' },
+          { at: 3.0, text: 'is going to miss its unloading appointment.' },
+          { at: 5.7, text: 'Someone needs to confirm when it will arrive,' },
+          { at: 8.2, text: 'agree a new slot, and keep the receiving team informed.' },
+        ],
+        beats: {
+          notification: 3.6, // "…miss its unloading appointment"
+        },
       },
       {
         id: 'eta',
         title: 'Confirm the ETA',
         stepLabel: 'Contact carrier',
-        duration: 15,
+        start: 11.9,
         narration:
-          'An agent could contact the carrier, confirm the revised arrival time and record the reason for the delay. The receiving team gets the information without having to chase it.',
-        beats: { agentAsks: 1.2, carrierReplies: 4.6, etaRecorded: 8.2 },
+          'A HappyRobot agent could call the carrier, confirm the revised arrival time, and record the reason for the delay. Here, the carrier expects to arrive at noon. The receiving team gets an update without having to chase.',
+        cues: [
+          { at: 12.1, text: 'A HappyRobot agent could call the carrier,' },
+          { at: 14.7, text: 'confirm the revised arrival time,' },
+          { at: 16.8, text: 'and record the reason for the delay.' },
+          { at: 19.1, text: 'Here, the carrier expects to arrive at noon.' },
+          { at: 22.4, text: 'The receiving team gets an update without having to chase.' },
+        ],
+        beats: {
+          agentAsks: 13.5, // "call the carrier"
+          carrierReplies: 19.2, // "Here, the carrier expects…"
+          etaRecorded: 21.6, // "…at noon"
+          teamUpdated: 22.6, // "The receiving team gets an update"
+        },
       },
       {
         id: 'slot',
         title: 'Request approval',
         stepLabel: 'Coordinate new slot',
-        duration: 17,
+        start: 25.8,
         narration:
-          'It could request a revised unloading slot from the receiving team. In this example, a person approves twelve-thirty. The agent then checks that the carrier can meet the new appointment.',
-        beats: { requestSent: 1.2, approved: 6.2, carrierCheck: 11 },
+          'The agent could then request a new unloading slot. In this example, the receiving team approves twelve-thirty. The agent checks with the carrier that the new appointment works.',
+        cues: [
+          { at: 26.0, text: 'The agent could then request a new unloading slot.' },
+          { at: 29.3, text: 'In this example, the receiving team approves twelve-thirty.' },
+          { at: 33.1, text: 'The agent checks with the carrier that the new appointment works.' },
+        ],
+        beats: {
+          requestSent: 27.0, // "request a new unloading slot"
+          approved: 31.35, // "approves twelve-thirty"
+          carrierCheck: 33.75, // "checks with the carrier"
+        },
       },
       {
         id: 'confirm',
         title: 'Confirm and update',
         stepLabel: 'Confirm & update',
-        duration: 15,
+        start: 36.5,
         narration:
-          'Once confirmed, the agent updates the appointment and shares the agreed plan. If there’s no suitable slot, or approval is needed, it hands the case to a person with the context attached.',
-        beats: { carrierConfirms: 0.8, recordUpdated: 3.4, teamNotified: 5.6, rule: 8.6 },
+          'Once the carrier confirms, the agent updates the appointment and notifies the receiving team. If a suitable slot can’t be agreed, it passes the case to a person with the details already gathered. That means less time chasing carriers and passing updates between teams. People keep control of the decisions, while the agent handles the follow-through.',
+        cues: [
+          { at: 36.7, text: 'Once the carrier confirms,' },
+          { at: 38.4, text: 'the agent updates the appointment and notifies the receiving team.' },
+          { at: 42.4, text: 'If a suitable slot can’t be agreed,' },
+          { at: 44.7, text: 'it passes the case to a person with the details already gathered.' },
+          { at: 48.5, text: 'That means less time chasing carriers and passing updates between teams.' },
+          { at: 53.1, text: 'People keep control of the decisions,' },
+          { at: 55.4, text: 'while the agent handles the follow-through.' },
+        ],
+        beats: {
+          carrierConfirms: 37.5, // "Once the carrier confirms"
+          recordUpdated: 39.1, // "updates the appointment"
+          teamNotified: 40.5, // "notifies the receiving team"
+          rule: 42.6, // "If a suitable slot can't be agreed"
+          summaryChasing: 49.15, // "less time chasing"
+          summaryUpdates: 51.45, // "passing updates"
+          summaryControl: 53.6, // "People keep control"
+        },
       },
       {
         id: 'resolve',
         title: 'Where this could help',
         stepLabel: 'Resolved',
-        duration: 16,
+        start: 57.8,
         narration:
-          'At DHL, HappyRobot already confirms carrier ETAs and supports warehouse coordination. For Gap, we’d explore where similar capabilities could reduce manual follow-up. Which delivery changes take your team the most calls to resolve?',
-        beats: { resolved: 0.4, proof: 4.6, question: 10 },
+          'At DHL, HappyRobot already confirms carrier arrival times, updates transport systems, and supports warehouse coordination. For Gap, we’d start with one workflow, prove its value, then explore other sites and related tasks. Where could taking that follow-up off your team’s hands make the biggest difference?',
+        cues: [
+          { at: 58.0, text: 'At DHL, HappyRobot already confirms carrier arrival times,' },
+          { at: 62.6, text: 'updates transport systems, and supports warehouse coordination.' },
+          { at: 66.7, text: 'For Gap, we’d start with one workflow, prove its value,' },
+          { at: 70.55, text: 'then explore other sites and related tasks.' },
+          { at: 73.7, text: 'Where could taking that follow-up off your team’s hands make the biggest difference?' },
+        ],
+        beats: {
+          resolved: 57.9, // scene opens as "At DHL…" begins
+          proof: 59.2, // "HappyRobot already confirms"
+          approachStart: 67.9, // "start with one workflow"
+          approachProve: 69.5, // "prove its value"
+          approachExplore: 70.9, // "explore other sites"
+          question: 73.8, // "Where could taking that follow-up…"
+        },
       },
     ] as SceneConfig[],
   },
+
+  /** Proposed-approach line revealed during the expansion narration. */
+  approach: {
+    label: 'Proposed approach',
+    steps: ['Start with one workflow', 'Prove value', 'Explore more sites and tasks'],
+  },
+
+  /** Summary revealed during the benefit narration, one phrase at a time. */
+  benefitSummary: ['Less chasing.', 'Clear updates.', 'People stay in control.'],
 };
 
 export type OutreachConfig = typeof outreach;

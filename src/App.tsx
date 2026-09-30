@@ -6,7 +6,7 @@ import { buildTimeline } from './walkthrough/timeline';
 const { page, account, vendor, attribution } = outreach;
 const byline = attribution.author ? `Unofficial concept by ${attribution.author}` : 'Unofficial concept';
 const base = import.meta.env.BASE_URL;
-const walkthroughSeconds = Math.round(buildTimeline(outreach.walkthrough.scenes).duration);
+const walkthroughSeconds = Math.round(buildTimeline(outreach.walkthrough.scenes, outreach.walkthrough.duration).duration);
 
 /**
  * Scrolls so the player sits clearly in view, then moves focus to it for

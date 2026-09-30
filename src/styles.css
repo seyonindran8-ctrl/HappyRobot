@@ -459,10 +459,38 @@ kbd {
   align-self: end;
 }
 
-.record-wrap {
+.stage-left {
   grid-area: record;
-  align-self: end;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+  min-width: 0;
+}
+
+.record-wrap {
   max-width: 300px;
+}
+
+/* Benefit summary, set like the Play screen's title: serif on the backdrop. */
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 4px;
+}
+
+.stage:not(.scene-confirm) .summary {
+  display: none;
+}
+
+.summary-line {
+  font-family: var(--serif);
+  font-size: clamp(26px, 2.6vw, 34px);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: #fffaf2;
+  text-shadow: 0 1px 14px rgba(14, 11, 8, 0.45);
 }
 
 /* Cards */
@@ -931,10 +959,50 @@ kbd {
   grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
   grid-template-areas:
     'main proof'
+    'approach approach'
     'question question';
   column-gap: 56px;
-  row-gap: 40px;
+  row-gap: 32px;
   align-items: end;
+}
+
+.resolve-approach {
+  grid-area: approach;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 16px;
+}
+
+.resolve-approach-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.resolve-approach-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  font-size: 16px;
+  color: var(--ink-soft);
+}
+
+.resolve-approach-step {
+  display: inline-flex;
+  gap: 10px;
+  opacity: 0;
+  transition: opacity var(--t-med) var(--ease);
+}
+
+.resolve-approach-step.is-in {
+  opacity: 1;
+}
+
+.resolve-approach-arrow {
+  color: var(--faint);
 }
 
 .resolve-main {
@@ -1160,6 +1228,12 @@ kbd {
   font-weight: 500;
   letter-spacing: 0.08em;
   color: var(--faint);
+}
+
+.ctl-sound {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .ctl-text.is-on {
@@ -1429,7 +1503,7 @@ kbd {
 
   .resolve-inner {
     grid-template-columns: 1fr;
-    grid-template-areas: 'main' 'proof' 'question';
+    grid-template-areas: 'main' 'proof' 'approach' 'question';
     row-gap: 24px;
   }
 }
@@ -1502,6 +1576,10 @@ kbd {
     display: none;
   }
 
+  .summary .reveal:not(.is-in) {
+    display: none;
+  }
+
   .record-row.is-secondary {
     display: none;
   }
@@ -1516,6 +1594,17 @@ kbd {
 
   .resolve {
     align-items: flex-start;
+  }
+
+  /* On phones the final scene takes the stage's place in the flow, so its
+     taller stacked content is never clipped. */
+  .stage.scene-resolve .stage-grid {
+    display: none;
+  }
+
+  .stage.scene-resolve .resolve {
+    position: relative;
+    min-height: 600px;
   }
 
   .resolve-inner {
@@ -1543,6 +1632,14 @@ kbd {
   .time {
     min-width: 0;
     font-size: 12px;
+  }
+
+  .ctl-sound {
+    padding: 0 9px;
+  }
+
+  .ctl-sound span {
+    display: none;
   }
 
   .chapters {

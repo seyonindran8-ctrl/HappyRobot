@@ -3,7 +3,7 @@ import { outreach } from '../config/gapOutreach';
 import { beatTime, sceneAt, type Timeline } from './timeline';
 import { Backdrop } from './Backdrop';
 
-const { shipment, page, vendor } = outreach;
+const { shipment, page, vendor, approach, benefitSummary } = outreach;
 const base = import.meta.env.BASE_URL;
 const { clock } = shipment;
 
@@ -38,7 +38,10 @@ export function Stage({ timeline, time, playing, reducedMotion }: Props) {
   const slotApproved = reached('slot', 'approved');
   const carrierConfirmed = reached('confirm', 'carrierConfirms');
   const appointmentUpdated = reached('confirm', 'recordUpdated');
+  const teamUpdated = reached('eta', 'teamUpdated');
   const teamNotified = reached('confirm', 'teamNotified');
+  const summaryBeats = ['summaryChasing', 'summaryUpdates', 'summaryControl'];
+  const approachBeats = ['approachStart', 'approachProve', 'approachExplore'];
 
   let status = 'Arrival delayed';
   if (etaConfirmed) status = 'ETA confirmed';
@@ -199,6 +202,16 @@ export function Stage({ timeline, time, playing, reducedMotion }: Props) {
           )}
         </div>
 
+        <div className="stage-left">
+        {/* Benefit summary: shown beside the completed workflow while the benefit is narrated. */}
+        <div className="summary" aria-hidden={scene.id !== 'confirm' || !reached('confirm', summaryBeats[0])}>
+          {benefitSummary.map((line, i) => (
+            <Reveal key={line} show={scene.id === 'confirm' && reached('confirm', summaryBeats[i])} className="summary-line">
+              {line}
+            </Reveal>
+          ))}
+        </div>
+
         <Reveal show={!inOpening && !resolving} className="record-wrap">
           <aside className="record" aria-label="Fictional shipment record">
             <div className="record-head">
@@ -228,8 +241,8 @@ export function Stage({ timeline, time, playing, reducedMotion }: Props) {
                   </>
                 )}
               </Row>
-              <Row label="Receiving team" highlight={fresh('eta', 'etaRecorded') || fresh('confirm', 'teamNotified')}>
-                {teamNotified ? 'Notified of agreed plan' : etaConfirmed ? `Informed of ETA ${shipment.revisedEta}` : <span className="muted">Not yet informed</span>}
+              <Row label="Receiving team" highlight={fresh('eta', 'teamUpdated') || fresh('confirm', 'teamNotified')}>
+                {teamNotified ? 'Notified of agreed plan' : teamUpdated ? `Informed of ETA ${shipment.revisedEta}` : <span className="muted">Not yet informed</span>}
               </Row>
             </dl>
             <div className={`record-status ${appointmentUpdated ? 'is-resolved' : ''}`}>
@@ -238,6 +251,7 @@ export function Stage({ timeline, time, playing, reducedMotion }: Props) {
             </div>
           </aside>
         </Reveal>
+        </div>
       </div>
 
       <div className={`resolve ${resolving ? 'is-visible' : ''}`} aria-hidden={!resolving}>
@@ -269,6 +283,21 @@ export function Stage({ timeline, time, playing, reducedMotion }: Props) {
               <span className="proof-card-tag">In use at DHL</span>
               <p>{page.proof.compact}</p>
             </div>
+          </Reveal>
+          <Reveal show={resolving && reached('resolve', approachBeats[0])} className="resolve-approach">
+            <span className="resolve-approach-label">{approach.label}</span>
+            <p className="resolve-approach-steps">
+              {approach.steps.map((step, i) => (
+                <span key={step} className={`resolve-approach-step ${resolving && reached('resolve', approachBeats[i]) ? 'is-in' : ''}`}>
+                  {i > 0 && (
+                    <span className="resolve-approach-arrow" aria-hidden="true">
+                      →
+                    </span>
+                  )}
+                  {step}
+                </span>
+              ))}
+            </p>
           </Reveal>
           <Reveal show={resolving && reached('resolve', 'question')} className="resolve-question-wrap">
             <p className="resolve-question">{page.closing.question}</p>

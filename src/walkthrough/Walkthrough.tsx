@@ -6,10 +6,9 @@ import { usePrefersReducedMotion } from './usePrefersReducedMotion';
 import { Stage } from './Stage';
 
 const { walkthrough, media, page, attribution } = outreach;
-const base = import.meta.env.BASE_URL;
 
 export function Walkthrough() {
-  const timeline = useMemo(() => buildTimeline(walkthrough.scenes), []);
+  const timeline = useMemo(() => buildTimeline(walkthrough.scenes, walkthrough.duration), []);
   const reducedMotion = usePrefersReducedMotion();
 
   // Narration is only mounted when enabled, and removed for good if it fails,
@@ -24,6 +23,13 @@ export function Walkthrough() {
 
   const [started, setStarted] = useState(false);
   const [captionsOn, setCaptionsOn] = useState(true);
+  // Sound off mutes the narration but keeps it running as the clock, so
+  // caption-only playback stays in sync.
+  const [soundOn, setSoundOn] = useState(true);
+
+  useEffect(() => {
+    if (audioEl) audioEl.muted = !soundOn;
+  }, [audioEl, soundOn]);
 
   const scene = sceneAt(timeline, time);
   const caption = captionAt(timeline, time);
@@ -86,6 +92,12 @@ export function Walkthrough() {
         // Like a media player: jump to the start of this scene, or the previous one if already near it.
         goToScene(time - scene.start > 1.5 ? scene.index : scene.index - 1);
         break;
+      case 'm':
+      case 'M':
+        if (!narrationOn) return;
+        e.preventDefault();
+        setSoundOn((on) => !on);
+        break;
       case 'c':
       case 'C':
         e.preventDefault();
@@ -118,7 +130,7 @@ export function Walkthrough() {
       {narrationOn && (
         <audio
           ref={setAudioEl}
-          src={base + media.narration.src}
+          src={media.narration.src}
           preload="auto"
           onLoadedMetadata={() => setAudioReady(true)}
           onError={() => setAudioFailed(true)}
@@ -136,7 +148,9 @@ export function Walkthrough() {
           {!started && (
             <div className="poster">
               <div className="poster-inner">
-                <p className="poster-kicker">Walkthrough · {formatTime(timeline.duration)} · Captions on</p>
+                <p className="poster-kicker">
+                  Walkthrough · {formatTime(timeline.duration)} · {narrationOn ? 'Narrated with captions' : 'Captions on'}
+                </p>
                 <p className="poster-title">From a missed unloading slot to a confirmed appointment</p>
                 <button type="button" className="poster-play" onClick={start}>
                   <PlayIcon />
@@ -195,6 +209,20 @@ export function Walkthrough() {
             {formatTime(time)} / {formatTime(timeline.duration)}
           </span>
 
+          {narrationOn && (
+            <button
+              type="button"
+              className={`ctl ctl-text ctl-sound ${soundOn ? 'is-on' : ''}`}
+              onClick={() => setSoundOn((on) => !on)}
+              aria-pressed={soundOn}
+              aria-label="Sound"
+              title="Sound (M)"
+            >
+              {soundOn ? <SoundOnIcon /> : <SoundOffIcon />}
+              <span>{soundOn ? 'Sound on' : 'Sound off'}</span>
+            </button>
+          )}
+
           <button
             type="button"
             className={`ctl ctl-text ${captionsOn ? 'is-on' : ''}`}
@@ -228,8 +256,31 @@ export function Walkthrough() {
 
       <p className="player-keys">
         Keyboard: <kbd>Space</kbd> play/pause · <kbd>←</kbd> <kbd>→</kbd> 5 s · <kbd>[</kbd> <kbd>]</kbd> scenes · <kbd>C</kbd> captions
+        {narrationOn && (
+          <>
+            {' '}· <kbd>M</kbd> sound
+          </>
+        )}
       </p>
     </div>
+  );
+}
+
+function SoundOnIcon() {
+  return (
+    <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+      <path d="M3.5 7.5h3l4-3.5v12l-4-3.5h-3z" fill="currentColor" />
+      <path d="M13.2 7.2a4 4 0 0 1 0 5.6M15.4 5a7 7 0 0 1 0 10" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function SoundOffIcon() {
+  return (
+    <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+      <path d="M3.5 7.5h3l4-3.5v12l-4-3.5h-3z" fill="currentColor" />
+      <path d="M13.5 8l4 4M17.5 8l-4 4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
   );
 }
 

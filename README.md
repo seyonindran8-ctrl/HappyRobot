@@ -26,18 +26,18 @@ npm run preview  # serve the production build on http://localhost:4173
 
 ### Adjusting timings after narration
 
-Each scene has a `duration`; start times are derived, so changing one shifts
-everything after it. `beats` are offsets from the start of their scene and
-control when each visual change happens. Captions are split by sentence and
-timed by word count automatically; add a `cues` array to a scene to time them
-by hand.
+Scene starts, caption cues and beats are all seconds from the start of the
+narration audio, so each can be checked against the waveform. `beats` are the
+moments when visual changes happen. In development, the page warns if a
+scene's captions stop matching its narration word for word, or if a beat
+falls outside its scene.
 
 ### Adding media
 
-See `public/media/README.md`. Put `gap-dc-opening.mp4` and `gap-narration.mp3`
-in `public/media/` and flip `enabled` to `true` in the config.
+See `public/media/README.md`. The narration is in `src/media/`; put `gap-dc-opening.mp4`
+in `public/media/` and flip its `enabled` flag to `true` in the config.
 
 ## Keyboard
 
-Space / K play-pause · ← → seek 5 s · [ ] previous / next scene · C captions ·
+Space / K play-pause · ← → seek 5 s · [ ] previous / next scene · C captions · M sound ·
 Home / End.
