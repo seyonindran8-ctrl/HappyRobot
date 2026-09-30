@@ -104,6 +104,12 @@ export const outreach = {
       question: 'Where could taking that follow-up off your team’s hands make the biggest difference?',
       supporting:
         'A useful first conversation would explore what your systems already handle, what still needs a call and where a small pilot could help.',
+      /** Booking link; opens in a new tab so the walkthrough stays open. */
+      cta: {
+        label: 'Discuss your workflow',
+        supporting: 'Book a conversation with Seyon Indran',
+        url: 'https://calendar.app.google/xzRKV4XDKQYbD2kK7',
+      },
     },
     footer:
       'Illustrative concept. All shipment data and interactions are fictional. This is not an existing Gap deployment, an official HappyRobot demo or a live integration.',

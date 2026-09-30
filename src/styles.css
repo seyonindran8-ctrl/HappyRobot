@@ -1478,6 +1478,53 @@ kbd {
   text-wrap: pretty;
 }
 
+/* Booking call to action, styled like the site's square black buttons. */
+.closing-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-top: 40px;
+}
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 15px 26px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background var(--t-fast) var(--ease);
+}
+
+.cta-button:hover {
+  background: #2f2f2c;
+}
+
+.cta-button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+
+.cta-supporting {
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 .site-footer {
   max-width: 1280px;
   padding-top: 24px;
@@ -1670,6 +1717,10 @@ kbd {
 
   .closing {
     text-align: left;
+  }
+
+  .closing-cta {
+    align-items: flex-start;
   }
 
   .closing-question,

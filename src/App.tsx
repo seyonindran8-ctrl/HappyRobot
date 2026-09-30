@@ -98,6 +98,15 @@ export function App() {
           <div className="closing-inner">
             <h2 className="closing-question">{page.closing.question}</h2>
             <p className="closing-supporting">{page.closing.supporting}</p>
+            <div className="closing-cta">
+              <a className="cta-button" href={page.closing.cta.url} target="_blank" rel="noopener noreferrer">
+                {page.closing.cta.label}
+              </a>
+              <p className="cta-supporting">
+                {page.closing.cta.supporting}
+                <span className="visually-hidden"> (opens in a new tab)</span>
+              </p>
+            </div>
           </div>
         </section>
       </main>
