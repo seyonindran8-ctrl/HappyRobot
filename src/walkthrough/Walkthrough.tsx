@@ -5,7 +5,7 @@ import { usePlaybackClock } from './usePlaybackClock';
 import { usePrefersReducedMotion } from './usePrefersReducedMotion';
 import { Stage } from './Stage';
 
-const { walkthrough, media, page } = outreach;
+const { walkthrough, media, page, attribution } = outreach;
 const base = import.meta.env.BASE_URL;
 
 export function Walkthrough() {
@@ -135,7 +135,9 @@ export function Walkthrough() {
                   <PlayIcon />
                   <span>Play walkthrough</span>
                 </button>
-                <p className="poster-hint">No sound needed</p>
+                <p className="poster-hint">
+                  No sound needed · {attribution.author ? `Unofficial concept by ${attribution.author}` : 'Unofficial concept'}
+                </p>
               </div>
             </div>
           )}

@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { outreach } from './config/gapOutreach';
 import { Walkthrough } from './walkthrough/Walkthrough';
 
-const { page, account, vendor, preparedBy } = outreach;
+const { page, account, vendor, attribution } = outreach;
+const byline = attribution.author ? `Unofficial concept by ${attribution.author}` : 'Unofficial concept';
 const base = import.meta.env.BASE_URL;
 
 function VendorMark() {
@@ -12,8 +13,21 @@ function VendorMark() {
 }
 
 export function App() {
+  useEffect(() => {
+    document.title = `${page.documentTitle} · ${byline}`;
+  }, []);
+
   return (
     <>
+      <div className="attribution-bar">
+        <p className="wrap-wide">
+          <strong>{byline}</strong>
+          <span className="attribution-sep" aria-hidden="true">·</span>
+          <span>{attribution.context}</span>
+          <span className="attribution-sep" aria-hidden="true">·</span>
+          <span>{attribution.disclaimer}</span>
+        </p>
+      </div>
       <header className="site-header">
         <div className="site-header-rule" aria-hidden="true" />
         <div className="wrap site-header-inner">
@@ -65,7 +79,10 @@ export function App() {
 
       <footer className="site-footer wrap">
         <p>{page.footer}</p>
-        {preparedBy && <p>Prepared by {preparedBy}.</p>}
+        <p>
+          {byline}. {attribution.context}. {attribution.disclaimer}. HappyRobot and Gap names and marks belong to
+          their respective owners.
+        </p>
       </footer>
     </>
   );

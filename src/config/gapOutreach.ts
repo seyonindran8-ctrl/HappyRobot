@@ -64,8 +64,16 @@ export const outreach = {
     },
   },
 
-  /** Optional author credit shown in the footer; leave null to omit. */
-  preparedBy: null as string | null,
+  /**
+   * Authorship. Shown in a bar above the header, on the Play screen, in the
+   * footer and in the tab title, so the page never reads as an official
+   * HappyRobot or Gap page. Set `author` before sharing the page.
+   */
+  attribution: {
+    author: null as string | null,
+    context: 'Prepared for a HappyRobot interview',
+    disclaimer: 'Not made or endorsed by HappyRobot or Gap',
+  },
 
   page: {
     documentTitle: 'Carrier Delay Walkthrough',
