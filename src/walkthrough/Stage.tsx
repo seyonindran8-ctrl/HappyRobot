@@ -266,7 +266,7 @@ export function Stage({ timeline, time, playing, reducedMotion }: Props) {
           </Reveal>
           <Reveal show={resolving && reached('resolve', 'proof')} className="resolve-proof">
             <div className="proof-card">
-              <span className="proof-card-tag">Public proof · DHL</span>
+              <span className="proof-card-tag">In use at DHL</span>
               <p>{page.proof.compact}</p>
             </div>
           </Reveal>

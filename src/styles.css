@@ -231,8 +231,8 @@ button {
    Hero
    ------------------------------------------------------------------ */
 .hero {
-  padding-top: clamp(64px, 9vw, 120px);
-  padding-bottom: clamp(40px, 5vw, 64px);
+  padding-top: clamp(28px, 2.6vw, 40px);
+  padding-bottom: clamp(20px, 1.8vw, 28px);
   text-align: center;
 }
 
@@ -245,11 +245,11 @@ button {
 }
 
 .headline {
-  margin: 22px auto 0;
-  max-width: 21ch;
+  margin: 14px auto 0;
+  max-width: none;
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(42px, 6.6vw, 80px);
+  font-size: clamp(38px, 4vw, 54px);
   line-height: 1.04;
   letter-spacing: -0.02em;
   text-wrap: balance;
@@ -261,11 +261,11 @@ button {
 }
 
 .intro {
-  margin: 26px auto 0;
-  max-width: 33em;
-  font-size: clamp(16px, 1.7vw, 18px);
+  margin: 16px auto 0;
+  max-width: 40em;
+  font-size: clamp(16px, 1.4vw, 17px);
   color: var(--muted);
-  text-wrap: pretty;
+  text-wrap: balance;
 }
 
 /* ------------------------------------------------------------------
@@ -930,7 +930,7 @@ kbd {
 }
 
 .resolve-title-time {
-  color: #8d8c86;
+  color: var(--ink);
 }
 
 .resolve-facts {
@@ -984,8 +984,10 @@ kbd {
   position: absolute;
   inset: 0;
   display: grid;
-  place-items: center;
-  padding: 24px;
+  /* Anchored near the top of the stage so the Play button clears the fold on
+     shorter laptop screens; the dock stays visible below it. */
+  place-items: start center;
+  padding: clamp(36px, 6vh, 72px) 24px 24px;
   background: linear-gradient(180deg, rgba(16, 13, 10, 0.5), rgba(16, 13, 10, 0.68));
   color: #fffaf2;
   text-align: center;
@@ -1003,7 +1005,7 @@ kbd {
 }
 
 .poster-title {
-  margin-top: 14px;
+  margin-top: 10px;
   font-family: var(--serif);
   font-size: clamp(30px, 3.6vw, 44px);
   line-height: 1.06;
@@ -1012,7 +1014,7 @@ kbd {
 }
 
 .poster-play {
-  margin-top: 30px;
+  margin-top: 22px;
   display: inline-flex;
   align-items: center;
   gap: 10px;
