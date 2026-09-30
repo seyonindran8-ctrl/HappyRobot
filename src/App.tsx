@@ -96,8 +96,8 @@ export function App() {
           <Walkthrough />
         </section>
 
-        <section className="proof wrap">
-          <div className="proof-grid">
+        <section className="proof">
+          <div className="wrap proof-grid">
             <h2 className="section-heading">{page.proof.heading}</h2>
             <div>
               <p className="proof-body">{page.proof.body}</p>
@@ -109,7 +109,7 @@ export function App() {
           </div>
         </section>
 
-        <section className="closing wrap">
+        <section className="closing wrap-wide">
           <div className="closing-inner">
             <h2 className="closing-question">{page.closing.question}</h2>
             <p className="closing-supporting">{page.closing.supporting}</p>

@@ -20,6 +20,15 @@
   --ok-wash: rgba(46, 158, 79, 0.1);
   --warn: #b85a1f;
 
+  /* Section grounds: dark proof band, pale stone closing panel. */
+  --charcoal: #1c1c1a;
+  --on-charcoal: #f4f2eb;
+  --on-charcoal-soft: #d9d6cd;
+  --on-charcoal-muted: #aeaca4;
+  --on-charcoal-line: rgba(244, 242, 235, 0.16);
+  --stone: #efece3;
+  --muted-on-stone: #5e5d58;
+
   --icon-alert: #f08a3c;
   --icon-agent: #141413;
   --icon-call: #34b35a;
@@ -240,7 +249,8 @@ button {
    ------------------------------------------------------------------ */
 .hero {
   padding-top: clamp(64px, 9vw, 120px);
-  padding-bottom: clamp(40px, 5vw, 64px);
+  /* Extra room between the scroll link and the demo (was clamp(40px, 5vw, 64px)). */
+  padding-bottom: clamp(56px, 8vw, 116px);
   text-align: center;
 }
 
@@ -1422,15 +1432,15 @@ kbd {
    Proof + closing
    ------------------------------------------------------------------ */
 .proof {
-  padding-bottom: clamp(64px, 9vw, 112px);
+  background: var(--charcoal);
+  color: var(--on-charcoal);
+  padding-block: clamp(64px, 8vw, 104px);
 }
 
 .proof-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 48px;
-  padding-top: 40px;
-  border-top: 1px solid var(--line);
 }
 
 .section-heading {
@@ -1442,9 +1452,13 @@ kbd {
   letter-spacing: -0.035em;
 }
 
+.proof .section-heading {
+  color: var(--on-charcoal);
+}
+
 .proof-body {
   font-size: 17px;
-  color: var(--ink-soft);
+  color: var(--on-charcoal-soft);
 }
 
 .proof-link {
@@ -1454,9 +1468,10 @@ kbd {
   font-size: 13px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--on-charcoal);
   text-decoration: underline;
-  text-decoration-color: var(--line-strong);
+  text-decoration-color: rgba(244, 242, 235, 0.5);
+  text-decoration-thickness: 1px;
   text-underline-offset: 5px;
   transition: text-decoration-color var(--t-fast) var(--ease);
 }
@@ -1465,22 +1480,33 @@ kbd {
   text-decoration-color: currentColor;
 }
 
+.proof-link:focus-visible {
+  outline-color: var(--on-charcoal);
+}
+
 .proof-distinction {
   margin-top: 20px;
   padding-top: 16px;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--on-charcoal-line);
   font-size: 14px;
-  color: var(--muted);
+  color: var(--on-charcoal-muted);
 }
 
 .closing {
   text-align: center;
-  padding-bottom: clamp(80px, 11vw, 144px);
+  padding-block: clamp(56px, 8vw, 104px);
 }
 
+/* Pale stone panel holding the question, supporting text and booking link. */
 .closing-inner {
-  padding-top: clamp(56px, 8vw, 96px);
-  border-top: 1px solid var(--line);
+  background: var(--stone);
+  padding: clamp(56px, 7vw, 96px) clamp(24px, 5vw, 72px);
+}
+
+/* The page's muted grey dips below 4.5:1 on stone; darken it here. */
+.closing-inner .closing-supporting,
+.closing-inner .cta-supporting {
+  color: var(--muted-on-stone);
 }
 
 .closing-question {
@@ -1739,18 +1765,6 @@ kbd {
     gap: 20px;
   }
 
-  .closing {
-    text-align: left;
-  }
-
-  .closing-cta {
-    align-items: flex-start;
-  }
-
-  .closing-question,
-  .closing-supporting {
-    margin-left: 0;
-  }
 }
 
 @media (max-width: 420px) {
