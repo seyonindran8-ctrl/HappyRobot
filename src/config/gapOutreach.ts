@@ -47,6 +47,19 @@ export const outreach = {
 
   vendor: {
     wordmark: 'HappyRobot',
+    /** Name shown on the agent card and as the sender of agent messages. */
+    agentName: 'HappyRobot Agent',
+    messageSender: 'HappyRobot',
+    /**
+     * Official logo mark for the agent tile. Use the real asset only — a
+     * square app-icon version (white mark on a dark tile) works best at this
+     * size. Until enabled, a neutral dark tile is shown. A missing file falls
+     * back to the neutral tile after one request.
+     */
+    logoMark: {
+      enabled: false,
+      src: 'brand/happyrobot-mark.svg',
+    },
   },
 
   /** Optional author credit shown in the footer; leave null to omit. */

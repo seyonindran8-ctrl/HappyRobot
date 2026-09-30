@@ -430,6 +430,16 @@ kbd {
 .icon-agent {
   background: var(--icon-agent);
 }
+.icon-logo {
+  overflow: hidden;
+  background: var(--icon-agent);
+}
+.icon-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
 .icon-call {
   background: var(--icon-call);
 }

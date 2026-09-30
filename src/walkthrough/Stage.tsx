@@ -1,9 +1,10 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { outreach } from '../config/gapOutreach';
 import { beatTime, sceneAt, type Timeline } from './timeline';
 import { Backdrop } from './Backdrop';
 
-const { shipment, page } = outreach;
+const { shipment, page, vendor } = outreach;
+const base = import.meta.env.BASE_URL;
 const { clock } = shipment;
 
 interface Props {
@@ -72,7 +73,7 @@ export function Stage({ timeline, time, playing, reducedMotion }: Props) {
               <Connector />
               <div className="frame" key={scene.id}>
                 <Card>
-                  <CardLine icon={<Icon kind="agent" />} label="AI agent" detail="Carrier coordination" />
+                  <CardLine icon={<AgentMark />} label={vendor.agentName} detail="Carrier coordination" />
                   <div className="agent-progress">
                     <span className="agent-progress-bars" aria-hidden="true">
                       {timeline.scenes.map((s) => (
@@ -101,7 +102,7 @@ export function Stage({ timeline, time, playing, reducedMotion }: Props) {
                     </Reveal>
                     <Reveal show={reached('eta', 'agentAsks')}>
                       <Card className="chat">
-                        <Message who="Agent" avatar={<Icon kind="agent" />} at={clock.callCarrier}>
+                        <Message who={vendor.messageSender} avatar={<AgentMark />} at={clock.callCarrier}>
                           What’s the revised arrival time for shipment {shipment.id}?
                         </Message>
                         <Reveal show={reached('eta', 'carrierReplies')}>
@@ -361,6 +362,17 @@ function Row({ label, highlight, secondary, children }: { label: string; highlig
   );
 }
 
+/** The vendor's official logo mark when supplied; otherwise a neutral tile. */
+function AgentMark() {
+  const [failed, setFailed] = useState(false);
+  if (!vendor.logoMark.enabled || failed) return <Icon kind="agent" />;
+  return (
+    <span className="icon icon-logo">
+      <img src={base + vendor.logoMark.src} alt="" onError={() => setFailed(true)} />
+    </span>
+  );
+}
+
 type IconKind = 'alert' | 'agent' | 'call' | 'message' | 'sync' | 'check';
 
 /** Generic tile icons in the style of a workflow canvas; not product logos. */
@@ -369,8 +381,8 @@ function Icon({ kind }: { kind: IconKind }) {
     alert: <path d="M8 4.5v4.2M8 11.2v.3" strokeWidth="1.8" />,
     agent: (
       <>
-        <rect x="4" y="5" width="8" height="6.5" rx="2" />
-        <path d="M6.5 8.2h.01M9.5 8.2h.01" strokeWidth="2" />
+        <circle cx="8" cy="8" r="3.6" />
+        <circle cx="8" cy="8" r="0.9" fill="currentColor" stroke="none" />
       </>
     ),
     call: <path d="M5.2 3.8l1.6.2.8 2.2-1.1.9a6.4 6.4 0 0 0 2.4 2.4l.9-1.1 2.2.8.2 1.6c-.2.7-.8 1.2-1.5 1.2A7.9 7.9 0 0 1 4 4.9c0-.7.5-1.1 1.2-1.1z" />,
