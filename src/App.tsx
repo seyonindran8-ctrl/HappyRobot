@@ -1,10 +1,29 @@
 import { useEffect, useState } from 'react';
 import { outreach } from './config/gapOutreach';
 import { Walkthrough } from './walkthrough/Walkthrough';
+import { buildTimeline } from './walkthrough/timeline';
 
 const { page, account, vendor, attribution } = outreach;
 const byline = attribution.author ? `Unofficial concept by ${attribution.author}` : 'Unofficial concept';
 const base = import.meta.env.BASE_URL;
+const walkthroughSeconds = Math.round(buildTimeline(outreach.walkthrough.scenes).duration);
+
+/**
+ * Scrolls so the player sits clearly in view, then moves focus to it for
+ * keyboard users. Never starts playback. Smooth unless the viewer prefers
+ * reduced motion.
+ */
+function scrollToWalkthrough(event: React.MouseEvent<HTMLAnchorElement>) {
+  const player = document.getElementById('walkthrough-player');
+  if (!player) return;
+  event.preventDefault();
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const rect = player.getBoundingClientRect();
+  // Centre the player when it fits; otherwise put its top just below the edge.
+  const offset = Math.max(16, (window.innerHeight - rect.height) / 2);
+  window.scrollTo({ top: window.scrollY + rect.top - offset, behavior: reduce ? 'auto' : 'smooth' });
+  player.focus({ preventScroll: true });
+}
 
 function VendorMark() {
   const [failed, setFailed] = useState(false);
@@ -50,6 +69,12 @@ export function App() {
             {page.headline.lead} <span className="headline-follow">{page.headline.follow}</span>
           </h1>
           <p className="intro">{page.intro}</p>
+          <a className="hero-jump" href="#walkthrough-player" onClick={scrollToWalkthrough}>
+            <span className="hero-jump-label">
+              {page.jumpLink.label} <span className="hero-jump-arrow" aria-hidden="true">↓</span>
+            </span>
+            <span className="hero-jump-meta">{page.jumpLink.meta.replace('{seconds}', String(walkthroughSeconds))}</span>
+          </a>
         </section>
 
         <section className="walkthrough wrap-wide" aria-label="Walkthrough">

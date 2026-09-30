@@ -107,7 +107,14 @@ export function Walkthrough() {
   const stageTime = started ? time : walkthrough.posterTime;
 
   return (
-    <div className="player" onKeyDown={onKeyDown} aria-label="Illustrative walkthrough" role="region">
+    <div
+      className="player"
+      id="walkthrough-player"
+      tabIndex={-1}
+      onKeyDown={onKeyDown}
+      aria-label="Illustrative walkthrough"
+      role="region"
+    >
       {narrationOn && (
         <audio
           ref={setAudioEl}

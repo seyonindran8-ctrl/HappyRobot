@@ -83,6 +83,8 @@ export const outreach = {
     headline: { lead: 'When a carrier runs late,', follow: 'how much work follows?' },
     intro:
       'A short illustration of how HappyRobot could help coordinate delivery changes between carriers and distribution-centre teams.',
+    /** Link under the introduction that scrolls to the walkthrough. `{seconds}` is filled from the scene timings. */
+    jumpLink: { label: 'See how it could work', meta: '{seconds}-second walkthrough' },
     walkthroughLabel: 'Illustrative workflow · Fictional shipment data · Not a live integration',
     proof: {
       heading: 'Relevant experience at DHL',
