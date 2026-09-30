@@ -141,6 +141,23 @@ button {
   white-space: nowrap;
 }
 
+.wordmark:has(.wordmark-mark) {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* The supplied PNG has generous padding, so it is drawn larger than the
+   visible mark to sit at roughly cap height + ascender, as in their nav. */
+.wordmark-mark {
+  width: 34px;
+  height: 34px;
+  margin: -6px 0 -6px -8px;
+  display: block;
+  /* Drops any white matte so the mark sits cleanly on the cream header. */
+  mix-blend-mode: multiply;
+}
+
 .wordmark-account {
   font-size: 12px;
   font-weight: 450;

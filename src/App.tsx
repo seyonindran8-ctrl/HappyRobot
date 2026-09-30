@@ -1,7 +1,15 @@
+import { useState } from 'react';
 import { outreach } from './config/gapOutreach';
 import { Walkthrough } from './walkthrough/Walkthrough';
 
 const { page, account, vendor, preparedBy } = outreach;
+const base = import.meta.env.BASE_URL;
+
+function VendorMark() {
+  const [failed, setFailed] = useState(false);
+  if (!vendor.logoMark.enabled || failed) return null;
+  return <img className="wordmark-mark" src={base + vendor.logoMark.markSrc} alt="" onError={() => setFailed(true)} />;
+}
 
 export function App() {
   return (
@@ -10,7 +18,10 @@ export function App() {
         <div className="site-header-rule" aria-hidden="true" />
         <div className="wrap site-header-inner">
           <div className="wordmarks">
-            <span className="wordmark">{vendor.wordmark}</span>
+            <span className="wordmark">
+              <VendorMark />
+              {vendor.wordmark}
+            </span>
             <span className="wordmark-sep" aria-hidden="true" />
             <span className="wordmark wordmark-account">Prepared for {account.wordmark}</span>
           </div>

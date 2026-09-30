@@ -1,9 +1,9 @@
 # Brand assets
 
-Add the official HappyRobot logo mark here as `happyrobot-mark.svg` (or
-change `vendor.logoMark.src` in `src/config/gapOutreach.ts`), then set
-`vendor.logoMark.enabled` to `true`.
+Official HappyRobot logo marks, supplied by the page author. Use real assets
+only; never redraw them.
 
-Use the real asset, not a redrawn one. A square app-icon version (white mark
-on a dark tile) suits the 22px agent tile best; a mark on a transparent
-background also works, shown on the dark tile.
+- `happyrobot-mark-tile.png` — white mark on a dark tile; the agent icon in the walkthrough.
+- `happyrobot-mark.png` — dark mark; shown beside the wordmark in the header.
+
+Paths and the on/off flag live under `vendor.logoMark` in `src/config/gapOutreach.ts`.

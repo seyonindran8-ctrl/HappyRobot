@@ -51,14 +51,16 @@ export const outreach = {
     agentName: 'HappyRobot Agent',
     messageSender: 'HappyRobot',
     /**
-     * Official logo mark for the agent tile. Use the real asset only — a
-     * square app-icon version (white mark on a dark tile) works best at this
-     * size. Until enabled, a neutral dark tile is shown. A missing file falls
-     * back to the neutral tile after one request.
+     * Official HappyRobot logo mark (real assets only, never redrawn). If
+     * disabled or a file fails to load, the agent icon falls back to a
+     * neutral dark tile and the header shows the text wordmark alone.
      */
     logoMark: {
-      enabled: false,
-      src: 'brand/happyrobot-mark.svg',
+      enabled: true,
+      /** White mark on a dark tile, used for the agent icon. */
+      tileSrc: 'brand/happyrobot-mark-tile.png',
+      /** Dark mark, shown beside the wordmark in the page header. */
+      markSrc: 'brand/happyrobot-mark.png',
     },
   },
 

@@ -368,7 +368,7 @@ function AgentMark() {
   if (!vendor.logoMark.enabled || failed) return <Icon kind="agent" />;
   return (
     <span className="icon icon-logo">
-      <img src={base + vendor.logoMark.src} alt="" onError={() => setFailed(true)} />
+      <img src={base + vendor.logoMark.tileSrc} alt="" onError={() => setFailed(true)} />
     </span>
   );
 }
