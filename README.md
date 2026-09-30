@@ -20,7 +20,7 @@ npm run preview  # serve the production build on http://localhost:4173
 | Page copy, fictional shipment, source links, narration, scene timings, media flags | `src/config/gapOutreach.ts` |
 | Playback clock (audio-driven or internal) | `src/walkthrough/usePlaybackClock.ts` |
 | Timeline maths (scene starts, caption cues, beats) | `src/walkthrough/timeline.ts` |
-| Walkthrough visuals (pure function of time) | `src/walkthrough/Stage.tsx`, `OpeningScene.tsx` |
+| Walkthrough visuals (pure function of time) | `src/walkthrough/Stage.tsx`, `Backdrop.tsx` |
 | Player chrome: poster, captions, controls, chapters, keyboard | `src/walkthrough/Walkthrough.tsx` |
 | Styles / design tokens | `src/styles.css` |
 

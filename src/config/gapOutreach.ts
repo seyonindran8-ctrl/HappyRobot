@@ -56,7 +56,8 @@ export const outreach = {
     documentTitle: 'Carrier Delay Walkthrough',
     conceptLabel: 'Illustrative concept',
     eyebrow: 'For Gap’s supply-chain team',
-    headline: 'When a carrier runs late, how much work follows?',
+    /** Rendered as one sentence; the second part is set in a lighter tone. */
+    headline: { lead: 'When a carrier runs late,', follow: 'how much work follows?' },
     intro:
       'A short illustration of how HappyRobot could help coordinate delivery changes between carriers and distribution-centre teams.',
     walkthroughLabel: 'Illustrative workflow · Fictional shipment data · Not a live integration',
@@ -88,6 +89,15 @@ export const outreach = {
     revisedEta: '12:00',
     approvedAppointment: '12:30',
     delayReason: 'Delayed at previous stop',
+    /** Fictional local times shown in the walkthrough, in story order. */
+    clock: {
+      opening: '09:12',
+      callCarrier: '09:14',
+      requestSlot: '09:16',
+      slotApproved: '09:21',
+      checkCarrier: '09:22',
+      carrierConfirmed: '09:24',
+    },
   },
 
   /**

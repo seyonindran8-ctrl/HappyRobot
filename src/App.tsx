@@ -7,6 +7,7 @@ export function App() {
   return (
     <>
       <header className="site-header">
+        <div className="site-header-rule" aria-hidden="true" />
         <div className="wrap site-header-inner">
           <div className="wordmarks">
             <span className="wordmark">{vendor.wordmark}</span>
@@ -20,7 +21,9 @@ export function App() {
       <main>
         <section className="hero wrap">
           <p className="eyebrow">{page.eyebrow}</p>
-          <h1 className="headline">{page.headline}</h1>
+          <h1 className="headline">
+            {page.headline.lead} <span className="headline-follow">{page.headline.follow}</span>
+          </h1>
           <p className="intro">{page.intro}</p>
         </section>
 
