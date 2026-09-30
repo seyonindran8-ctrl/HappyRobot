@@ -25,6 +25,21 @@ function scrollToWalkthrough(event: React.MouseEvent<HTMLAnchorElement>) {
   player.focus({ preventScroll: true });
 }
 
+function AccountMark() {
+  const [failed, setFailed] = useState(false);
+  if (!account.logo.enabled || failed) {
+    return <span className="wordmark wordmark-account">Prepared for {account.wordmark}</span>;
+  }
+  return (
+    <img
+      className="account-logo"
+      src={base + account.logo.src}
+      alt={account.logo.alt}
+      onError={() => setFailed(true)}
+    />
+  );
+}
+
 function VendorMark() {
   const [failed, setFailed] = useState(false);
   if (!vendor.logoMark.enabled || failed) return null;
@@ -56,7 +71,7 @@ export function App() {
               {vendor.wordmark}
             </span>
             <span className="wordmark-sep" aria-hidden="true" />
-            <span className="wordmark wordmark-account">Prepared for {account.wordmark}</span>
+            <AccountMark />
           </div>
           <span className="concept-pill">{page.conceptLabel}</span>
         </div>

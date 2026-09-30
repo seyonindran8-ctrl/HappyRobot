@@ -44,8 +44,15 @@ export interface SceneConfig {
 export const outreach = {
   account: {
     name: 'Gap',
-    /** Understated text wordmark; no logo assets are used. */
+    /** Text wordmark; shown if the logo is disabled or fails to load. */
     wordmark: 'Gap Inc.',
+    /** Official Gap Inc. logo (supplied by the page author), shown in the header. */
+    logo: {
+      enabled: true,
+      src: 'brand/gap-inc-logo.webp',
+      /** Read by screen readers in place of the old "Prepared for Gap Inc." text. */
+      alt: 'Prepared for Gap Inc.',
+    },
     team: 'supply-chain team',
   },
 

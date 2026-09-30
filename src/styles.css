@@ -209,6 +209,14 @@ button {
   color: var(--muted);
 }
 
+.account-logo {
+  display: block;
+  height: 14px;
+  width: auto;
+  /* Drops the white matte so the logo sits cleanly on the cream header. */
+  mix-blend-mode: multiply;
+}
+
 .wordmark-sep {
   width: 1px;
   height: 18px;
@@ -1746,6 +1754,11 @@ kbd {
 
   .wordmark-account {
     font-size: 10.5px;
+  }
+
+  .account-logo {
+    height: 12px;
+    margin-top: 6px;
   }
 }
 
