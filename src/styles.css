@@ -275,9 +275,15 @@ button {
   text-wrap: balance;
 }
 
+/* Two-tone headline: the lead line is grey and the second line carries the
+   emphasis in ink. */
+.headline {
+  color: #8d8c86;
+}
+
 .headline-follow {
   display: block;
-  color: #8d8c86;
+  color: var(--ink);
 }
 
 .intro {
