@@ -1,0 +1,32 @@
+# Netlify deploy for seyonindran.com/gap-walkthrough
+#
+# The walkthrough is built into dist-site/gap-walkthrough/, so it's served at
+# /gap-walkthrough/ on whatever domain the Netlify site uses. See DEPLOY.md.
+
+[build]
+  command = "npm run build:site"
+  publish = "dist-site"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Nothing else lives on the domain yet, so the bare domain forwards to the
+# walkthrough. Remove this if you later add a homepage.
+[[redirects]]
+  from = "/"
+  to = "/gap-walkthrough/"
+  status = 302
+
+# Keep the concept out of search results (the page also sets a robots meta tag).
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Content-Type-Options = "nosniff"
+
+# Built assets have content hashes in their names, so they can be cached for good.
+[[headers]]
+  for = "/gap-walkthrough/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

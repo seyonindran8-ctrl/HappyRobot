@@ -13,6 +13,12 @@ npm run build    # type-check + production build to dist/
 npm run preview  # serve the production build on http://localhost:4173
 ```
 
+## Deploying
+
+`netlify.toml` deploys the walkthrough to `/gap-walkthrough/` on Netlify
+(`npm run build:site` builds it into `dist-site/`). See [DEPLOY.md](DEPLOY.md)
+for putting it at seyonindran.com/gap-walkthrough.
+
 ## Where things live
 
 | What | Where |
