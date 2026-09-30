@@ -70,7 +70,7 @@ export const outreach = {
    * HappyRobot or Gap page. Set `author` before sharing the page.
    */
   attribution: {
-    author: null as string | null,
+    author: 'Seyon Indran' as string | null,
     context: 'Prepared for a HappyRobot interview',
     disclaimer: 'Not made or endorsed by HappyRobot or Gap',
   },
