@@ -182,8 +182,12 @@ export const outreach = {
   },
 
   walkthrough: {
-    /** Frame shown behind the Play button before playback starts (seconds). */
-    posterTime: 4,
+    /**
+     * Frame shown behind the Play button before playback starts (seconds).
+     * 0 keeps the Play screen identical to the first frame of playback, so
+     * nothing appears or vanishes when Play is pressed.
+     */
+    posterTime: 0,
     /**
      * Total runtime. The narration is 78.1 s; the extra seconds hold the
      * closing question on screen so it can be read.

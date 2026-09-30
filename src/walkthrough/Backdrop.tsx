@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { outreach } from '../config/gapOutreach';
 
 const { openingVideo } = outreach.media;
@@ -11,15 +11,58 @@ const DRIFT_TOLERANCE = 0.12;
 /** Push-in: an eased zoom through the opening, then a gentle drift for the rest. */
 const ZOOM_OPENING = 0.06;
 const ZOOM_REST = 0.03;
+/** Re-align the push-in with the clock only when it strays further than this (seconds). */
+const ZOOM_RESYNC = 0.25;
 
-function pushIn(time: number, openingEnd: number, duration: number): number {
-  if (time <= openingEnd) {
-    const p = Math.max(time, 0) / openingEnd;
-    // Ease-out: moving from the first frame, settling as the opening ends.
-    return 1 + ZOOM_OPENING * Math.sin((p * Math.PI) / 2);
-  }
-  const p = Math.min((time - openingEnd) / (duration - openingEnd), 1);
-  return 1 + ZOOM_OPENING + ZOOM_REST * p;
+/**
+ * The push-in runs as a Web Animation so the browser advances it smoothly
+ * every frame. Driving it from the narration clock made it step unevenly,
+ * because an audio element's currentTime only updates in irregular chunks.
+ * The animation is kept in line with the clock: it plays and pauses with
+ * playback and is re-aligned on seeks, scene jumps and replay.
+ */
+function usePushIn(
+  ref: React.RefObject<HTMLDivElement>,
+  time: number,
+  openingEnd: number,
+  duration: number,
+  playing: boolean,
+  reducedMotion: boolean,
+) {
+  const anim = useRef<Animation | null>(null);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || reducedMotion) return;
+    const s = (v: number) => `scale3d(${v}, ${v}, 1)`;
+    const a = el.animate(
+      [
+        // Ease-out (sine) through the opening: moving from the first frame, settling as it ends.
+        { transform: s(1), easing: 'cubic-bezier(0.39, 0.575, 0.565, 1)' },
+        { transform: s(1 + ZOOM_OPENING), offset: openingEnd / duration, easing: 'linear' },
+        { transform: s(1 + ZOOM_OPENING + ZOOM_REST) },
+      ],
+      { duration: duration * 1000, fill: 'both' },
+    );
+    a.pause();
+    anim.current = a;
+    return () => {
+      a.cancel();
+      anim.current = null;
+    };
+  }, [ref, openingEnd, duration, reducedMotion]);
+
+  useEffect(() => {
+    const a = anim.current;
+    if (!a) return;
+    const current = (Number(a.currentTime) || 0) / 1000;
+    if (Math.abs(current - time) > ZOOM_RESYNC || !playing) a.currentTime = time * 1000;
+    if (playing && time < duration) {
+      if (a.playState !== 'running') a.play();
+    } else if (a.playState === 'running') {
+      a.pause();
+    }
+  }, [time, playing, duration]);
 }
 
 interface Props {
@@ -47,7 +90,13 @@ export function Backdrop({ time, openingEnd, duration, playing, reducedMotion }:
   const [videoFailed, setVideoFailed] = useState(false);
   const [clipLength, setClipLength] = useState<number | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const mediaRef = useRef<HTMLDivElement>(null);
+  // The poster image only covers loading; once the first frame is decoded the
+  // video shows it itself, so pressing Play doesn't swap image for video.
+  const [firstFrameReady, setFirstFrameReady] = useState(false);
   const useVideo = openingVideo.enabled && !videoFailed && !reducedMotion;
+
+  usePushIn(mediaRef, time, openingEnd, duration, playing, reducedMotion);
 
   useEffect(() => {
     const v = videoRef.current;
@@ -88,21 +137,20 @@ export function Backdrop({ time, openingEnd, duration, playing, reducedMotion }:
     if (v.paused || v.ended) v.play().catch(() => undefined);
   }, [time, playing, useVideo, clipLength]);
 
-  const scale = reducedMotion ? 1 : pushIn(time, openingEnd, duration);
-
   return (
     <div className="backdrop" aria-hidden="true">
-      <div className="backdrop-media" style={{ transform: `scale3d(${scale}, ${scale}, 1)` }}>
+      <div className="backdrop-media" ref={mediaRef}>
         {useVideo ? (
           <video
             ref={videoRef}
             className="backdrop-video"
-            poster={openingVideo.poster}
+            poster={firstFrameReady ? undefined : openingVideo.poster}
             muted
             playsInline
             preload="auto"
             disablePictureInPicture
             onLoadedMetadata={(e) => setClipLength(e.currentTarget.duration)}
+            onLoadedData={() => setFirstFrameReady(true)}
           >
             {openingVideo.sources.map((source, i) => (
               <source
