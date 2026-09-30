@@ -34,8 +34,9 @@ falls outside its scene.
 
 ### Adding media
 
-See `public/media/README.md`. The narration is in `src/media/`; put `gap-dc-opening.mp4`
-in `public/media/` and flip its `enabled` flag to `true` in the config.
+The narration and opening footage live in `src/media/` and are switched on in
+the config's `media` section. See `public/media/README.md` for how they play
+and how to replace them.
 
 ## Keyboard
 

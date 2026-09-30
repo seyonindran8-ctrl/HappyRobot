@@ -14,6 +14,9 @@
  */
 
 import narrationUrl from '../media/gap-narration.mp3';
+import openingWebmUrl from '../media/gap-dc-opening.webm';
+import openingMp4Url from '../media/gap-dc-opening.mp4';
+import openingStillUrl from '../media/gap-dc-final-frame.jpg';
 
 export interface CaptionCue {
   /** Seconds from the start of the narration. */
@@ -149,9 +152,20 @@ export const outreach = {
    * internal clock) without retrying.
    */
   media: {
+    /**
+     * Opening footage (5.04 s, muted). Plays once from Play, then holds its
+     * final frame behind the workflow scenes. Re-encoded from the supplied
+     * 10-bit HEVC master so every browser can play it: WebM (VP9) first, H.264
+     * MP4 for Safari. `still` is the final frame, shown if the video can't
+     * load and when the viewer prefers reduced motion.
+     */
     openingVideo: {
-      enabled: false,
-      src: 'media/gap-dc-opening.mp4',
+      enabled: true,
+      sources: [
+        { src: openingWebmUrl, type: 'video/webm' },
+        { src: openingMp4Url, type: 'video/mp4' },
+      ],
+      still: openingStillUrl,
     },
     /**
      * ElevenLabs narration (78.1 s). Imported so the build bundles it; when
