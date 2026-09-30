@@ -95,7 +95,7 @@ export const outreach = {
     conceptLabel: 'Illustrative concept',
     eyebrow: 'For Gap’s supply-chain team',
     /** Rendered as one sentence; the second part is set in a lighter tone. */
-    headline: { lead: 'When a carrier runs late,', follow: 'how much work follows?' },
+    headline: { lead: 'How much does a late delivery', follow: 'really cost you?' },
     intro:
       'A short illustration of how HappyRobot could help coordinate delivery changes between carriers and distribution-centre teams.',
     /** Link under the introduction that scrolls to the walkthrough. `{seconds}` is filled from the scene timings. */

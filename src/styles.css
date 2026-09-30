@@ -264,7 +264,9 @@ button {
 
 .headline {
   margin: 22px auto 0;
-  max-width: 21ch;
+  /* No width cap: at every size the first line fits the hero's width on
+     desktop, and wraps naturally on narrow screens. */
+  max-width: none;
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(42px, 6.6vw, 80px);
